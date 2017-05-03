@@ -85,4 +85,34 @@ class Converter
 
         return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
     }
+
+    /**
+     * The Hijri date Day for a given Julian
+     *
+     * @param float $julianDay
+     *
+     * @return \stdClass
+     */
+    public static function julianToHijri(float $julianDay)
+    {
+        $y = 10631.0 / 30.0;
+        $epochAstro = 1948084;
+        $shift1 = 8.01 / 60.0;
+
+        $z = $julianDay - $epochAstro;
+        $cyc = floor($z / 10631.0);
+        $z = $z - 10631 * $cyc;
+        $j = floor(($z - $shift1) / $y);
+        $z = $z - floor($j * $y + $shift1);
+
+        $year = 30 * $cyc + $j;
+        $month = floor(($z + 28.5001) / 29.5);
+        if ($month === 13)
+        {
+            $month = 12;
+        }
+        $day = $z - floor(29.5001 * $month - 29);
+
+        return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
+    }
 }
