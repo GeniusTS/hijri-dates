@@ -50,4 +50,39 @@ class Converter
         return floor((11 * $year + 3) / 30) + floor(354 * $year) + floor(30 * $month)
             - floor(($month - 1) / 2) + $day + 1948440 - 386;
     }
+
+    /**
+     * The Gregorian date Day for a given Julian
+     *
+     * @param float $julianDay
+     *
+     * @return \stdClass
+     */
+    public static function julianToGregorian(float $julianDay)
+    {
+        $b = 0;
+        if ($julianDay > 2299160)
+        {
+            $a = floor(($julianDay - 1867216.25) / 36524.25);
+            $b = 1 + $a - floor($a / 4.0);
+        }
+
+        $bb = $julianDay + $b + 1524;
+        $cc = floor(($bb - 122.1) / 365.25);
+        $dd = floor(365.25 * $cc);
+        $ee = floor(($bb - $dd) / 30.6001);
+
+        $day = ($bb - $dd) - floor(30.6001 * $ee);
+        $month = $ee - 1;
+
+        if ($ee > 13)
+        {
+            $cc += 1;
+            $month = $ee - 13;
+        }
+
+        $year = $cc - 4716;
+
+        return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
+    }
 }
