@@ -1,0 +1,22 @@
+{
+    "name": "geniusts/hijri-dates",
+    "description": "PHP library to convert Gregorian date to Hijri date and vice versa",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Abdul-Kader Zein-Eddin",
+            "email": "aboudeh1987@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7",
+        "nesbot/carbon": "^1.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "GeniusTS\\HijriDate\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
