@@ -62,15 +62,15 @@ class Date
     public function __construct(int $day,
         int $month,
         int $year,
-        float $julianDay,
+        float $julianDay = 0,
         int $adjustment = 0,
         Carbon $date = null)
     {
         $this->day = $day;
         $this->month = $month;
         $this->year = $year;
-        $this->julianDay = $julianDay;
-        $this->date = $date ?: new Carbon(implode('-', (array) Converter::jdToGregorian($julianDay)));
+        $this->julianDay = $julianDay ?: Converter::hijriToJulian($year, $month, $day);
+        $this->date = $date ?: new Carbon(implode('-', (array) Converter::jdToGregorian($this->julianDay)));
         $this->adjustment = $adjustment;
     }
 
