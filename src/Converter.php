@@ -36,4 +36,18 @@ class Converter
         return floor(365.25 * ($year + 4716)) + floor(30.6001 * ($month + 1)) + $day + $b - 1524;
     }
 
+    /**
+     * The Julian Day for a given Hijri date.
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     *
+     * @return float
+     */
+    public static function hijriToJulian(int $year, int $month, int $day)
+    {
+        return floor((11 * $year + 3) / 30) + floor(354 * $year) + floor(30 * $month)
+            - floor(($month - 1) / 2) + $day + 1948440 - 386;
+    }
 }
