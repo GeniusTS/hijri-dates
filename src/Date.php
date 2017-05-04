@@ -112,10 +112,10 @@ use GeniusTS\HijriDate\Translations\TranslationInterface;
  * @method bool isThursday()
  * @method bool isFriday()
  * @method bool isSaturday()
- * @method static Date now(\DateTimeZone|string|null $tz, int $adjustment = 0)
- * @method static Date today(\DateTimeZone|string|null $tz, int $adjustment = 0)
- * @method static Date tomorrow(\DateTimeZone|string|null $tz, int $adjustment = 0)
- * @method static Date yesterday(\DateTimeZone|string|null $tz, int $adjustment = 0)
+ * @method static Date now(\DateTimeZone | string | null $tz)
+ * @method static Date today(\DateTimeZone | string | null $tz)
+ * @method static Date tomorrow(\DateTimeZone | string | null $tz)
+ * @method static Date yesterday(\DateTimeZone | string | null $tz)
  */
 class Date
 {
@@ -198,7 +198,7 @@ class Date
     /**
      * @var int
      */
-    protected $adjustment;
+    protected static $adjustment = 0;
 
     /**
      * @var \GeniusTS\HijriDate\Translations\TranslationInterface
@@ -219,14 +219,12 @@ class Date
      * @param int                 $month // Hijri month
      * @param int                 $year  // Hijri year
      * @param float               $julianDay
-     * @param int                 $adjustment
      * @param \Carbon\Carbon|null $date
      */
     public function __construct(int $day,
         int $month,
         int $year,
         float $julianDay = 0,
-        int $adjustment = 0,
         Carbon $date = null)
     {
         $this->day = $day;
@@ -234,7 +232,6 @@ class Date
         $this->year = $year;
         $this->julianDay = $julianDay ?: Converter::hijriToJulian($year, $month, $day);
         $this->date = $date ?: new Carbon(implode('-', (array) Converter::julianToGregorian($this->julianDay)));
-        $this->adjustment = $adjustment;
         if (! static::$translation)
         {
             static::setTranslation(new English);
@@ -251,6 +248,26 @@ class Date
     public static function setTranslation(TranslationInterface $translation)
     {
         static::$translation = $translation;
+    }
+
+    /**
+     * get Adjustment value
+     *
+     * @return int
+     */
+    public static function getAdjustment()
+    {
+        return static::$adjustment;
+    }
+
+    /**
+     * Change Adjustment value
+     *
+     * @param int $adjustment
+     */
+    public static function setAdjustment(int $adjustment)
+    {
+        static::$adjustment = $adjustment;
     }
 
     /**
@@ -400,6 +417,8 @@ class Date
     }
 
     /**
+     * Get attributes value
+     *
      * @param $attribute
      *
      * @return mixed
@@ -408,7 +427,6 @@ class Date
     {
         switch ($attribute)
         {
-            case 'adjustment':
             case 'julianDay':
                 return $this->{$attribute};
             case 'gregorian':
@@ -440,6 +458,7 @@ class Date
                 throw new InvalidArgumentException("Undefined property '{$attribute}'");
         }
     }
+
 
     /**
      * Call functions of Carbon instance
@@ -563,7 +582,7 @@ class Date
             case 'yesterday':
                 $date = Carbon::{$name}(...$arguments);
 
-                return Hijri::convertToHijri($date, count($arguments) > 1 ? $arguments[1] : 0);
+                return Hijri::convertToHijri($date);
             default:
                 throw new BadMethodCallException("Undefined '{$name}' method!");
         }

@@ -17,11 +17,10 @@ class Hijri
      * Convert Gregorian date to Hijri date
      *
      * @param     $date
-     * @param int $adjustment (days number)
      *
      * @return \GeniusTS\HijriDate\Date
      */
-    public static function convertToHijri($date, int $adjustment = 0)
+    public static function convertToHijri($date)
     {
         $static = new static;
 
@@ -30,7 +29,7 @@ class Hijri
             $date = new Carbon($date);
         }
 
-        return $static->toHijri($date, $adjustment);
+        return $static->toHijri($date, Date::getAdjustment());
     }
 
     /**
@@ -39,15 +38,14 @@ class Hijri
      * @param int $day
      * @param int $month
      * @param int $year
-     * @param int $adjustment (days number)
      *
      * @return Carbon
      */
-    public static function convertToGregorian(int $day, int $month, int $year, int $adjustment = 0)
+    public static function convertToGregorian(int $day, int $month, int $year)
     {
         $static = new static;
 
-        return $static->toGregorian($day, $month, $year, $adjustment);
+        return $static->toGregorian($day, $month, $year, Date::getAdjustment());
     }
 
     /**
@@ -68,7 +66,7 @@ class Hijri
         $jd = Converter::gregorianToJulian($date->year, $date->month, $date->day);
         $hijri = Converter::julianToHijri($jd);
 
-        return new Date($hijri->day, $hijri->month, $hijri->year, $jd, $adjustment, clone $date);
+        return new Date($hijri->day, $hijri->month, $hijri->year, $jd, clone $date);
     }
 
     /**
