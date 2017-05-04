@@ -430,7 +430,9 @@ class Date
             case 'julianDay':
                 return $this->{$attribute};
             case 'gregorian':
-                return clone $this->date;
+                $date = clone $this->date;
+
+                return $date->addDays(static::getAdjustment());
             case 'hour':
             case 'minute':
             case 'second':
@@ -458,7 +460,6 @@ class Date
                 throw new InvalidArgumentException("Undefined property '{$attribute}'");
         }
     }
-
 
     /**
      * Call functions of Carbon instance
