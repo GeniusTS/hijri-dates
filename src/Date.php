@@ -4,6 +4,7 @@ namespace GeniusTS\HijriDate;
 
 
 use Carbon\Carbon;
+use BadMethodCallException;
 use InvalidArgumentException;
 use GeniusTS\HijriDate\Translations\English;
 use GeniusTS\HijriDate\Translations\TranslationInterface;
@@ -11,20 +12,110 @@ use GeniusTS\HijriDate\Translations\TranslationInterface;
 /**
  * Class Date
  *
- * @package GeniusTS\HijriDate
+ * @package       GeniusTS\HijriDate
  *
- * @property-read Carbon $gregorian // return copy of gregorian date
- * @property-read float  $julianDay
- * @property-read int    $day
- * @property-read int    $month
- * @property-read int    $year
- * @property-read int    $yearIso
- * @property-read int    $hour
- * @property-read int    $minute
- * @property-read int    $second
- * @property-read int    $micro
- * @property-read int    $dayOfWeek
- * @property-read int    $timestamp
+ * @property-read Carbon        $gregorian // return copy of gregorian date
+ * @property-read float         $julianDay
+ * @property-read int           $day
+ * @property-read int           $month
+ * @property-read int           $year
+ * @property-read int           $yearIso
+ * @property-read int           $hour
+ * @property-read int           $minute
+ * @property-read int           $second
+ * @property-read int           $micro
+ * @property-read int           $dayOfWeek
+ * @property-read int           $timestamp
+ * @property-read int           $offset
+ * @property-read int           $offsetHours
+ * @property-read bool          $dst
+ * @property-read bool          $local
+ * @property-read bool          $utc
+ * @property-read \DateTimeZone $timezone
+ * @property-read string        $timezoneName
+ * @property-read string        $tzName
+ * @method Date setDateTime($year, $month, $day, $hour, $minute, $second = 0)
+ * @method Date setDate($year, $month, $day)
+ * @method Date addDay(int $value = 1)
+ * @method Date addDays(int $value)
+ * @method Date subDay(int $value = 1)
+ * @method Date subDays(int $value)
+ * @method Date setTimestamp(int $unixtimestamp)
+ * @method Date year(int $value)
+ * @method Date month(int $value)
+ * @method Date day(int $value)
+ * @method Date timestamp(int $unixtimestamp)
+ * @method Date addWeekdays(int $value)
+ * @method Date addWeekday(int $value = 1)
+ * @method Date subWeekday(int $value = 1)
+ * @method Date subWeekdays(int $value)
+ * @method Date addWeeks(int $value)
+ * @method Date addWeek(int $value = 1)
+ * @method Date subWeek(int $value = 1)
+ * @method Date subWeeks(int $value)
+ * @method Date addHours(int $value)
+ * @method Date addHour(int $value = 1)
+ * @method Date subHour(int $value = 1)
+ * @method Date subHours(int $value)
+ * @method Date addMinutes(int $value)
+ * @method Date addMinute(int $value = 1)
+ * @method Date subMinute(int $value = 1)
+ * @method Date subMinutes(int $value)
+ * @method Date addSeconds(int $value)
+ * @method Date addSecond(int $value = 1)
+ * @method Date subSecond(int $value = 1)
+ * @method Date subSeconds(int $value)
+ * @method Date startOfWeek()
+ * @method Date endOfWeek()
+ * @method Date next($dayOfWeek = null)
+ * @method Date nextOrPreviousDay($weekday = true, $forward = true)
+ * @method Date nextWeekday()
+ * @method Date previousWeekday()
+ * @method Date nextWeekendDay()
+ * @method Date previousWeekendDay()
+ * @method Date previous()
+ * @method Date startOfDay()
+ * @method Date setTime($hour, $minute, $second = 0, $microseconds = 0)
+ * @method Date setTimezone(\DateTimeZone | string $value)
+ * @method Date hour(int $value)
+ * @method Date minute(int $value)
+ * @method Date second(int $value)
+ * @method Date setTimeFromTimeString(string $time)
+ * @method Date timezone(\DateTimeZone | string $value)
+ * @method Date tz(\DateTimeZone | string $value)
+ * @method bool eq(Carbon | Date $dt)
+ * @method bool equalTo(Carbon | Date $dt)
+ * @method bool ne(Carbon | Date $dt)
+ * @method bool notEqualTo(Carbon | Date $dt)
+ * @method bool gt(Carbon | Date $dt)
+ * @method bool greaterThan(Carbon | Date $dt)
+ * @method bool gte(Carbon | Date $dt)
+ * @method bool greaterThanOrEqualTo(Carbon | Date $dt)
+ * @method bool lt(Carbon | Date $dt)
+ * @method bool lessThan(Carbon | Date $dt)
+ * @method bool lte(Carbon | Date $dt)
+ * @method bool lessThanOrEqualTo(Carbon | Date $dt)
+ * @method bool between(Carbon | Date $dt1, Carbon | Date $dt2, $equal = true)
+ * @method bool isWeekday()
+ * @method bool isWeekend()
+ * @method bool isYesterday()
+ * @method bool isToday()
+ * @method bool isTomorrow()
+ * @method bool isNextWeek()
+ * @method bool isLastWeek()
+ * @method bool isFuture()
+ * @method bool isPast()
+ * @method bool isSunday()
+ * @method bool isMonday()
+ * @method bool isTuesday()
+ * @method bool isWednesday()
+ * @method bool isThursday()
+ * @method bool isFriday()
+ * @method bool isSaturday()
+ * @method static Date now(\DateTimeZone|string|null $tz, int $adjustment = 0)
+ * @method static Date today(\DateTimeZone|string|null $tz, int $adjustment = 0)
+ * @method static Date tomorrow(\DateTimeZone|string|null $tz, int $adjustment = 0)
+ * @method static Date yesterday(\DateTimeZone|string|null $tz, int $adjustment = 0)
  */
 class Date
 {
@@ -32,6 +123,11 @@ class Date
     /* allowed numbers values */
     const ARABIC_NUMBERS = 0;
     const INDIAN_NUMBERS = 1;
+
+    /**
+     * @var string
+     */
+    protected static $toStringFormat = 'Y-m-d H:i:s';
 
     /**
      * Available formats
@@ -148,60 +244,6 @@ class Date
     }
 
     /**
-     * Get a date instance for the current date and time.
-     *
-     * @param \DateTimeZone|string|null $tz
-     * @param int                       $adjustment
-     *
-     * @return static
-     */
-    public static function now($tz = null, int $adjustment = 0)
-    {
-        $carbon = new Carbon(null, $tz);
-
-        return Hijri::convertToHijri($carbon, $adjustment);
-    }
-
-    /**
-     * Create a date instance for today.
-     *
-     * @param \DateTimeZone|string|null $tz
-     * @param int                       $adjustment
-     *
-     * @return static
-     */
-    public static function today($tz = null, int $adjustment = 0)
-    {
-        return static::now($tz, $adjustment)->startOfDay();
-    }
-
-    /**
-     * Create a date instance for tomorrow.
-     *
-     * @param \DateTimeZone|string|null $tz
-     * @param int                       $adjustment
-     *
-     * @return static
-     */
-    public static function tomorrow($tz = null, int $adjustment = 0)
-    {
-        return static::today($tz, $adjustment)->addDay();
-    }
-
-    /**
-     * Create a new date instance for yesterday.
-     *
-     * @param \DateTimeZone|string|null $tz
-     * @param int                       $adjustment
-     *
-     * @return static
-     */
-    public static function yesterday($tz = null, int $adjustment = 0)
-    {
-        return static::today($tz, $adjustment)->subDay();
-    }
-
-    /**
      * Change translation class
      *
      * @param \GeniusTS\HijriDate\Translations\TranslationInterface $translation
@@ -212,96 +254,13 @@ class Date
     }
 
     /**
-     * Resets the time to 00:00:00
+     * Set the default format
      *
-     * @return static
+     * @param string $format
      */
-    public function startOfDay()
+    public static function setToStringFormat($format)
     {
-        $this->date->setTime(0, 0, 0);
-
-        return $this;
-    }
-
-    /**
-     * Add or remove days from instance.
-     *
-     * @param int $value
-     *
-     * @return static
-     */
-    public function addDays($value)
-    {
-        $this->date->addDays($value);
-
-        return $this->recalculate();
-    }
-
-    /**
-     * Add a day to the instance
-     *
-     * @param int $value
-     *
-     * @return static
-     */
-    public function addDay($value = 1)
-    {
-        return $this->addDays($value);
-    }
-
-    /**
-     * Remove a day from the instance
-     *
-     * @param int $value
-     *
-     * @return static
-     */
-    public function subDay($value = 1)
-    {
-        return $this->subDays($value);
-    }
-
-    /**
-     * Remove days from the instance
-     *
-     * @param int $value
-     *
-     * @return static
-     */
-    public function subDays($value)
-    {
-        return $this->addDays(-1 * $value);
-    }
-
-    /**
-     * Set the instance's timezone from a string or object
-     *
-     * @param \DateTimeZone|string $value
-     *
-     * @return $this
-     */
-    public function setTimezone($value)
-    {
-        $this->date->setTimezone($value);
-
-        return $this;
-    }
-
-    /**
-     * Sets the current time to a different time.
-     *
-     * @param int $hour
-     * @param int $minute
-     * @param int $second
-     *
-     * @return static
-     */
-
-    public function setTime($hour, $minute, $second = 0)
-    {
-        $this->date->setTime($hour, $minute, $second);
-
-        return $this;
+        static::$toStringFormat = $format;
     }
 
     /**
@@ -344,7 +303,9 @@ class Date
     protected function recalculate()
     {
         $julian = Converter::gregorianToJulian($this->date->year, $this->date->month, $this->date->day);
+
         $hijri = Converter::julianToHijri($julian);
+
         $this->julianDay = $julian;
         $this->day = $hijri->day;
         $this->month = $hijri->month;
@@ -356,7 +317,7 @@ class Date
     /**
      * Fill formats values
      *
-     * @return $this
+     * @return static
      */
     protected function fillValuesArray()
     {
@@ -377,12 +338,65 @@ class Date
         $this->values['a'] = $this->date->hour >= 12 ? static::$translation->getPeriods()[1] : static::$translation->getPeriods()[0];
         $this->values['A'] = strtoupper($this->date->hour >= 12 ? static::$translation->getPeriods()[1] : static::$translation->getPeriods()[0]);
 
+        $this->fillCarbonValues();
+
+        return $this;
+    }
+
+    /**
+     * get format values from carbon instance
+     *
+     * @return $this
+     */
+    protected function fillCarbonValues()
+    {
         foreach ($this->formats as $format)
         {
             $this->values[$format] = $this->date->format($format);
         }
 
         return $this;
+    }
+
+    /**
+     * Get the days of the week
+     *
+     * @return array
+     */
+    public static function getDays()
+    {
+        return static::$translation->getDays();
+    }
+
+    /**
+     * simulate Comparision function od Carbon class
+     *
+     * @param string $function
+     * @param array  $arguments
+     */
+    protected function comparision($function, array $arguments)
+    {
+        $args = [];
+
+        foreach ($arguments as $argument)
+        {
+            if ($argument instanceof Date)
+            {
+                $args[] = $argument->gregorian;
+            }
+            elseif ($argument instanceof Carbon)
+            {
+                $args[] = $argument;
+            }
+            else
+            {
+                throw new InvalidArgumentException(
+                    sprintf("date must be instance of %s or %s", Carbon::class, static::class)
+                );
+            }
+        }
+
+        return $this->date->{$function}(...$args);
     }
 
     /**
@@ -405,6 +419,14 @@ class Date
             case 'micro':
             case 'dayOfWeek':
             case 'timestamp':
+            case 'offset':
+            case 'offsetHours':
+            case 'dst':
+            case 'local':
+            case 'utc':
+            case 'timezone':
+            case 'timezoneName':
+            case 'tzName':
                 return $this->date->{$attribute};
             case 'year':
                 return $this->values['Y'];
@@ -418,4 +440,143 @@ class Date
                 throw new InvalidArgumentException("Undefined property '{$attribute}'");
         }
     }
+
+    /**
+     * Call functions of Carbon instance
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        switch ($name)
+        {
+            case 'setDateTime':
+            case 'setDate':
+            case 'addDay':
+            case 'addDays':
+            case 'subDay':
+            case 'subDays':
+            case 'setTimestamp':
+            case 'year':
+            case 'month':
+            case 'day':
+            case 'timestamp':
+            case 'addWeekdays':
+            case 'addWeekday':
+            case 'subWeekday':
+            case 'subWeekdays':
+            case 'addWeeks':
+            case 'addWeek':
+            case 'subWeek':
+            case 'subWeeks':
+            case 'addHours':
+            case 'addHour':
+            case 'subHour':
+            case 'subHours':
+            case 'addMinutes':
+            case 'addMinute':
+            case 'subMinute':
+            case 'subMinutes':
+            case 'addSeconds':
+            case 'addSecond':
+            case 'subSecond':
+            case 'subSeconds':
+            case 'endOfWeek':
+            case 'startOfWeek':
+            case 'next':
+            case 'nextOrPreviousDay':
+            case 'nextWeekday':
+            case 'previousWeekday':
+            case 'nextWeekendDay':
+            case 'previousWeekendDay':
+            case 'previous':
+                $this->date->{$name}(...$arguments);
+
+                return $this->recalculate();
+            case 'startOfDay':
+            case 'setTime':
+            case 'setTimezone':
+            case 'hour':
+            case 'minute':
+            case 'second':
+            case 'setTimeFromTimeString':
+            case 'timezone':
+            case 'tz':
+                $this->date->{$name}(...$arguments);
+
+                return $this->fillCarbonValues();
+            case 'eq':
+            case 'equalTo':
+            case 'ne':
+            case 'notEqualTo':
+            case 'gt':
+            case 'greaterThan':
+            case 'gte':
+            case 'greaterThanOrEqualTo':
+            case 'lt':
+            case 'lessThan':
+            case 'lte':
+            case 'lessThanOrEqualTo':
+            case 'between':
+                return $this->comparision($name, $arguments);
+            case 'isWeekday':
+            case 'isWeekend':
+            case 'isYesterday':
+            case 'isToday':
+            case 'isTomorrow':
+            case 'isNextWeek':
+            case 'isLastWeek':
+            case 'isFuture':
+            case 'isPast':
+            case 'isSunday':
+            case 'isMonday':
+            case 'isTuesday':
+            case 'isWednesday':
+            case 'isThursday':
+            case 'isFriday':
+            case 'isSaturday':
+                return $this->date->{$name}(...$arguments);
+
+            default:
+                throw new BadMethodCallException("Undefined '{$name}' method!");
+        }
+    }
+
+    /**
+     * Call functions of Carbon instance
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return static
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        switch ($name)
+        {
+            case 'now':
+            case 'today':
+            case 'tomorrow':
+            case 'yesterday':
+                $date = Carbon::{$name}(...$arguments);
+
+                return Hijri::convertToHijri($date, count($arguments) > 1 ? $arguments[1] : 0);
+            default:
+                throw new BadMethodCallException("Undefined '{$name}' method!");
+        }
+    }
+
+    /**
+     * Format the instance as a string using the set format
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->format(static::$toStringFormat);
+    }
+
 }
