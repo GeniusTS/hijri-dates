@@ -17,7 +17,7 @@ class Hijri
      * Convert Gregorian date to Hijri date
      *
      * @param     $date
-     * @param int $adjustment
+     * @param int $adjustment (days number)
      *
      * @return \GeniusTS\HijriDate\Date
      */
@@ -39,7 +39,7 @@ class Hijri
      * @param int $day
      * @param int $month
      * @param int $year
-     * @param int $adjustment
+     * @param int $adjustment (days number)
      *
      * @return Carbon
      */
@@ -68,7 +68,7 @@ class Hijri
         $jd = Converter::gregorianToJulian($date->year, $date->month, $date->day);
         $hijri = Converter::julianToHijri($jd);
 
-        return new Date($hijri->day, $hijri->month, $hijri->year, $jd, $adjustment, $date);
+        return new Date($hijri->day, $hijri->month, $hijri->year, $jd, $adjustment, clone $date);
     }
 
     /**
@@ -87,7 +87,7 @@ class Hijri
 
         $date = Converter::julianToGregorian($jd);
 
-        return (new Carbon("{$date->year}-{$date->month}-{$date->day}"))->addMinutes($adjustment);
+        return (new Carbon("{$date->year}-{$date->month}-{$date->day}"))->addDays($adjustment);
     }
 }
 
