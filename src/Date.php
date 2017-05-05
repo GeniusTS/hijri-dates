@@ -130,6 +130,11 @@ class Date
     protected static $toStringFormat = 'Y-m-d H:i:s';
 
     /**
+     * @var int
+     */
+    protected static $default_numbers = Date::ARABIC_NUMBERS;
+
+    /**
      * Available formats
      *
      * @var array
@@ -271,6 +276,36 @@ class Date
     }
 
     /**
+     * get default numeric system
+     *
+     * @return int
+     */
+    public static function getDefaultNumbers()
+    {
+        return static::$default_numbers;
+    }
+
+    /**
+     * Change default numeric system
+     *
+     * @param int $numbers
+     */
+    public static function setDefaultNumbers(int $numbers)
+    {
+        static::$default_numbers = $numbers;
+    }
+
+    /**
+     * get the default format
+     *
+     * @return string
+     */
+    public static function getToStringFormat()
+    {
+        return static::$toStringFormat;
+    }
+
+    /**
      * Set the default format
      *
      * @param string $format
@@ -288,8 +323,11 @@ class Date
      *
      * @return string
      */
-    public function format(string $format = 'l j M o', int $numbers = Date::ARABIC_NUMBERS)
+    public function format(string $format = null, int $numbers = null)
     {
+        $numbers = $numbers === null ? static::getDefaultNumbers() : $numbers;
+        $format = $format === null ? static::getDefaultNumbers() : $numbers;
+
         $formatArray = str_split($format);
         $dateString = '';
 
