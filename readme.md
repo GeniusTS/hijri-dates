@@ -62,9 +62,23 @@ It's based on [nesbot/carbon](https://github.com/briannesbitt/Carbon) package.
 	\GeniusTS\HijriDate\Date::setTranslation(new Arabic);
 ```
 
+* Changing the default toString format language.
+
+```php
+	\GeniusTS\HijriDate\Date::setToStringFormat('l d F o');
+```
+
+* Changing the default numeric system.
+
+```php
+	use GeniusTS\HijriDate\Date;
+
+	Date::setDefaultNumbers(Date::INDIAN_NUMBERS);
+```
+
 ----
 
-There is some methods from `Carbon` class you can use it on `Date` class.
+There is some methods from `Carbon` class you can use it with `Date` class.
 
 ---
 
