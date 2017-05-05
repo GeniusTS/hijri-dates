@@ -112,10 +112,10 @@ use GeniusTS\HijriDate\Translations\TranslationInterface;
  * @method bool isThursday()
  * @method bool isFriday()
  * @method bool isSaturday()
- * @method static Date now(\DateTimeZone | string | null $tz)
- * @method static Date today(\DateTimeZone | string | null $tz)
- * @method static Date tomorrow(\DateTimeZone | string | null $tz)
- * @method static Date yesterday(\DateTimeZone | string | null $tz)
+ * @method static Date now(\DateTimeZone | string | null $tz = null)
+ * @method static Date today(\DateTimeZone | string | null $tz = null)
+ * @method static Date tomorrow(\DateTimeZone | string | null $tz = null)
+ * @method static Date yesterday(\DateTimeZone | string | null $tz = null)
  */
 class Date
 {
@@ -326,7 +326,7 @@ class Date
     public function format(string $format = null, int $numbers = null)
     {
         $numbers = $numbers === null ? static::getDefaultNumbers() : $numbers;
-        $format = $format === null ? static::getDefaultNumbers() : $numbers;
+        $format = $format === null ? static::getToStringFormat() : $format;
 
         $formatArray = str_split($format);
         $dateString = '';
