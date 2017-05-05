@@ -288,7 +288,7 @@ class Date
      *
      * @return string
      */
-    public function format(string $format = 'l j M o', int $numbers = 0)
+    public function format(string $format = 'l j M o', int $numbers = Date::ARABIC_NUMBERS)
     {
         $formatArray = str_split($format);
         $dateString = '';

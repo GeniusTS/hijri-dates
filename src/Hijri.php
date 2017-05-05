@@ -22,14 +22,12 @@ class Hijri
      */
     public static function convertToHijri($date)
     {
-        $static = new static;
-
         if (! $date instanceof Carbon)
         {
             $date = new Carbon($date);
         }
 
-        return $static->toHijri($date, Date::getAdjustment());
+        return static::toHijri($date, Date::getAdjustment());
     }
 
     /**
@@ -43,9 +41,7 @@ class Hijri
      */
     public static function convertToGregorian(int $day, int $month, int $year)
     {
-        $static = new static;
-
-        return $static->toGregorian($day, $month, $year, Date::getAdjustment());
+        return static::toGregorian($day, $month, $year, Date::getAdjustment());
     }
 
     /**
@@ -56,7 +52,7 @@ class Hijri
      *
      * @return \GeniusTS\HijriDate\Date
      */
-    protected function toHijri(Carbon $date, int $adjustment = 0)
+    protected static function toHijri(Carbon $date, int $adjustment = 0)
     {
         if ($adjustment)
         {
@@ -79,7 +75,7 @@ class Hijri
      *
      * @return Carbon
      */
-    protected function toGregorian(int $day, int $month, int $year, int $adjustment = 0)
+    protected static function toGregorian(int $day, int $month, int $year, int $adjustment = 0)
     {
         $jd = Converter::hijriToJulian($year, $month, $day);
 

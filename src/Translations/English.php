@@ -25,7 +25,7 @@ class English implements TranslationInterface
         'Jumada al-akhirah',
         'Rajab',
         'Sha‘ban',
-        'Ramadhan',
+        'Ramadan',
         'Shawwal',
         'Thu al-Qa‘dah',
         'Thu al-Hijjah',
