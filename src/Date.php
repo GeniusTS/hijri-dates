@@ -432,7 +432,7 @@ class Date
             case 'gregorian':
                 $date = clone $this->date;
 
-                return $date->addDays(static::getAdjustment());
+                return $date->addDays(-1 * static::getAdjustment());
             case 'hour':
             case 'minute':
             case 'second':
