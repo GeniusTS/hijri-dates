@@ -17,6 +17,5 @@
         "psr-4": {
             "GeniusTS\\HijriDate\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
