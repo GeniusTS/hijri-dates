@@ -65,3 +65,9 @@ It's based on [nesbot/carbon](https://github.com/briannesbitt/Carbon) package.
 ----
 
 There is some methods from `Carbon` class you can use it on `Date` class.
+
+---
+
+## License
+
+This package is free software distributed under the terms of the MIT license.
