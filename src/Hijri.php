@@ -54,12 +54,9 @@ class Hijri
      */
     protected static function toHijri(Carbon $date, int $adjustment = 0)
     {
-        if ($adjustment)
-        {
-            $date->addDays($adjustment);
-        }
+        $adjusted = (new Carbon($date))->addDays($adjustment);
 
-        $jd = Converter::gregorianToJulian($date->year, $date->month, $date->day);
+        $jd = Converter::gregorianToJulian($adjusted->year, $adjusted->month, $adjusted->day);
         $hijri = Converter::julianToHijri($jd);
 
         return new Date($hijri->day, $hijri->month, $hijri->year, $jd, clone $date);
@@ -81,7 +78,7 @@ class Hijri
 
         $date = Converter::julianToGregorian($jd);
 
-        return (new Carbon("{$date->year}-{$date->month}-{$date->day}"))->addDays($adjustment);
+        return (new Carbon("{$date->year}-{$date->month}-{$date->day}"))->addDays(-1 * $adjustment);
     }
 }
 

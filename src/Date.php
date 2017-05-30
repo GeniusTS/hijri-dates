@@ -468,9 +468,7 @@ class Date
             case 'julianDay':
                 return $this->{$attribute};
             case 'gregorian':
-                $date = clone $this->date;
-
-                return $date->addDays(-1 * static::getAdjustment());
+                return clone $this->date;
             case 'hour':
             case 'minute':
             case 'second':
