@@ -100,18 +100,18 @@ class Converter
         $shift1 = 8.01 / 60.0;
 
         $z = $julianDay - $epochAstro;
-        $cyc = self::trunc($z / 10631.0);
+        $cyc = floor($z / 10631.0);
         $z = $z - 10631 * $cyc;
-        $j = self::trunc(($z - $shift1) / $y);
-        $z = $z - self::trunc($j * $y + $shift1);
+        $j = floor(($z - $shift1) / $y);
+        $z = $z - floor($j * $y + $shift1);
 
         $year = 30 * $cyc + $j;
-        $month = self::trunc(($z + 28.5001) / 29.5);
+        $month = floor(($z + 28.5001) / 29.5);
         if ($month === 13)
         {
             $month = 12;
         }
-        $day = $z - self::trunc(29.5001 * $month - 29);
+        $day = $z - floor(29.5001 * $month - 29);
 
         return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
     }
