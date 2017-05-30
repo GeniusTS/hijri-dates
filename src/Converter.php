@@ -48,7 +48,7 @@ class Converter
     public static function hijriToJulian(int $year, int $month, int $day)
     {
         return floor((11 * $year + 3) / 30) + floor(354 * $year) + floor(30 * $month)
-            - floor(($month - 1) / 2) + $day + 1948440 - 386;
+            - floor(($month - 1) / 2) + $day + 1948440 - 385;
     }
 
     /**
