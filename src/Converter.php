@@ -22,18 +22,14 @@ class Converter
      */
     public static function gregorianToJulian(int $year, int $month, int $day)
     {
-        if ($month < 3)
-        {
-            $year -= 1;
-            $month += 12;
-        }
+        // reference https://en.wikipedia.org/wiki/Julian_day
+        $a = floor((14 - $month) / 12);
+        $y = $year + 4800 - $a;
+        $m = $month + (12 * $a) - 3;
 
-        $a = floor($year / 100.0);
-        $b = ($year === 1582 && ($month > 10 || ($month === 10 && $day > 4)) ? -10 :
-            ($year === 1582 && $month === 10 ? 0 :
-                ($year < 1583 ? 0 : 2 - $a + floor($a / 4.0))));
-
-        return floor(365.25 * ($year + 4716)) + floor(30.6001 * ($month + 1)) + $day + $b - 1524;
+        return $day + floor(((153 * $m) + 2) / 5)
+            + (365 * $y) + floor($y / 4) - floor($y / 100)
+            + floor($y / 400) - 32045;
     }
 
     /**
