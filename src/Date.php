@@ -203,7 +203,7 @@ class Date
     /**
      * @var int
      */
-    protected static $adjustment = 0;
+    protected $adjustment = 0;
 
     /**
      * @var \GeniusTS\HijriDate\Translations\TranslationInterface
@@ -225,18 +225,22 @@ class Date
      * @param int                 $year  // Hijri year
      * @param float               $julianDay
      * @param \Carbon\Carbon|null $date
+     * @param int                 $adjustment
      */
     public function __construct(int $day,
         int $month,
         int $year,
         float $julianDay = 0,
-        Carbon $date = null)
+        Carbon $date = null,
+        int $adjustment = 0)
     {
         $this->day = $day;
         $this->month = $month;
         $this->year = $year;
         $this->julianDay = $julianDay ?: Converter::hijriToJulian($year, $month, $day);
         $this->date = $date ?: new Carbon(implode('-', (array) Converter::julianToGregorian($this->julianDay)));
+        $this->adjustment = $adjustment;
+
         if (! static::$translation)
         {
             static::setTranslation(new English);
@@ -256,23 +260,23 @@ class Date
     }
 
     /**
-     * get Adjustment value
+     * get default adjustment value
      *
      * @return int
      */
-    public static function getAdjustment()
+    public function getAdjustment()
     {
-        return static::$adjustment;
+        return $this->adjustment;
     }
 
     /**
-     * Change Adjustment value
+     * Change default adjustment value
      *
      * @param int $adjustment
      */
-    public static function setAdjustment(int $adjustment)
+    public function setAdjustment(int $adjustment)
     {
-        static::$adjustment = $adjustment;
+        $this->adjustment = $adjustment;
     }
 
     /**
@@ -357,7 +361,9 @@ class Date
      */
     protected function recalculate()
     {
-        $julian = Converter::gregorianToJulian($this->date->year, $this->date->month, $this->date->day);
+        $adjusted = (new Carbon($this->date))->addDays($this->adjustment);
+
+        $julian = Converter::gregorianToJulian($adjusted->year, $adjusted->month, $adjusted->day);
 
         $hijri = Converter::julianToHijri($julian);
 
