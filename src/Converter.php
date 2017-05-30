@@ -22,14 +22,18 @@ class Converter
      */
     public static function gregorianToJulian(int $year, int $month, int $day)
     {
-        // reference https://en.wikipedia.org/wiki/Julian_day
-        $a = floor((14 - $month) / 12);
-        $y = $year + 4800 - $a;
-        $m = $month + (12 * $a) - 3;
+        if ($month < 3)
+        {
+            $year -= 1;
+            $month += 12;
+        }
 
-        return $day + floor(((153 * $m) + 2) / 5)
-            + (365 * $y) + floor($y / 4) - floor($y / 100)
-            + floor($y / 400) - 32045;
+        $a = floor($year / 100.0);
+        $b = ($year === 1582 && ($month > 10 || ($month === 10 && $day > 4)) ? -10 :
+            ($year === 1582 && $month === 10 ? 0 :
+                ($year < 1583 ? 0 : 2 - $a + floor($a / 4.0))));
+
+        return floor(365.25 * ($year + 4716)) + floor(30.6001 * ($month + 1)) + $day + $b - 1524.5;
     }
 
     /**
@@ -96,18 +100,18 @@ class Converter
         $shift1 = 8.01 / 60.0;
 
         $z = $julianDay - $epochAstro;
-        $cyc = floor($z / 10631.0);
+        $cyc = self::trunc($z / 10631.0);
         $z = $z - 10631 * $cyc;
-        $j = floor(($z - $shift1) / $y);
-        $z = $z - floor($j * $y + $shift1);
+        $j = self::trunc(($z - $shift1) / $y);
+        $z = $z - self::trunc($j * $y + $shift1);
 
         $year = 30 * $cyc + $j;
-        $month = floor(($z + 28.5001) / 29.5);
+        $month = self::trunc(($z + 28.5001) / 29.5);
         if ($month === 13)
         {
             $month = 12;
         }
-        $day = $z - floor(29.5001 * $month - 29);
+        $day = $z - self::trunc(29.5001 * $month - 29);
 
         return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
     }
