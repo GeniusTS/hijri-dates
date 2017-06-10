@@ -51,7 +51,7 @@ It's based on [nesbot/carbon](https://github.com/briannesbitt/Carbon) package.
 * Changing the adjustment days.
 
 ```php
-	\GeniusTS\HijriDate\Date::setAdjustment(1);
+	\GeniusTS\HijriDate\Hijri::setDefaultAdjustment(1);
 ```
 
 * Changing the translation language.
