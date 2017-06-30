@@ -111,7 +111,9 @@ class Converter
         {
             $month = 12;
         }
+
         $day = $z - floor(29.5001 * $month - 29);
+        $day = $day < 1 ? 1 : floor($day);
 
         return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
     }
