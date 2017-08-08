@@ -33,7 +33,7 @@ class Converter
             ($year === 1582 && $month === 10 ? 0 :
                 ($year < 1583 ? 0 : 2 - $a + floor($a / 4.0))));
 
-        return floor(365.25 * ($year + 4716)) + floor(30.6001 * ($month + 1)) + $day + $b - 1524.5;
+        return floor(365.25 * ($year + 4716)) + floor(30.6001 * ($month + 1)) + $day + $b - 1524;
     }
 
     /**
@@ -48,7 +48,7 @@ class Converter
     public static function hijriToJulian(int $year, int $month, int $day)
     {
         return floor((11 * $year + 3) / 30) + floor(354 * $year) + floor(30 * $month)
-            - floor(($month - 1) / 2) + $day + 1948440 - 385;
+            - floor(($month - 1) / 2) + $day + 1948440 - 386;
     }
 
     /**
@@ -113,7 +113,6 @@ class Converter
         }
 
         $day = $z - floor(29.5001 * $month - 29);
-        $day = $day < 1 ? 1 : floor($day);
 
         return (object) ['year' => (int) $year, 'month' => (int) $month, 'day' => (int) $day];
     }
