@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7",
-        "nesbot/carbon": "^1.22"
+        "nesbot/carbon": "^2.16|^1.22"
     },
     "autoload": {
         "psr-4": {
