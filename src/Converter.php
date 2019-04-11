@@ -106,7 +106,7 @@ class Converter
         $z = $z - floor($j * $y + $shift1);
 
         $year = 30 * $cyc + $j;
-        $month = floor(($z + 28.5001) / 29.5);
+        $month = (int)floor(($z + 28.5001) / 29.5);
         if ($month === 13)
         {
             $month = 12;
