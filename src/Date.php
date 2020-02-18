@@ -123,6 +123,7 @@ class Date
     /* allowed numbers values */
     const ARABIC_NUMBERS = 0;
     const INDIAN_NUMBERS = 1;
+    const PERSIAN_NUMBERS = 2;
 
     /**
      * @var string
@@ -174,6 +175,13 @@ class Date
      * @var array
      */
     protected $arabicNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    /**
+     * Persian numbers
+     *
+     * @var array
+     */
+    protected $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
     /**
      * @var Carbon
@@ -349,6 +357,10 @@ class Date
         if ($numbers === static::INDIAN_NUMBERS)
         {
             $dateString = str_replace($this->arabicNumbers, $this->indianNumbers, $dateString);
+        }
+        elseif ($numbers === static::PERSIAN_NUMBERS)
+        {
+            $dateString = str_replace($this->arabicNumbers, $this->persianNumbers, $dateString);
         }
 
         return $dateString;
