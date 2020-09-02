@@ -382,7 +382,7 @@ class Date
         $this->julianDay = $julian;
         $this->day = $hijri->day;
         $this->month = $hijri->month;
-        $this->day = $hijri->day;
+        $this->year = $hijri->year;
 
         return $this->fillValuesArray();
     }
