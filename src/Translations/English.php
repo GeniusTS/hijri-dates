@@ -20,7 +20,7 @@ class English implements TranslationInterface
         'Muḥarram',
         'Ṣafar',
         'Rabi‘ al-awwal',
-        'Rabi‘ at-akhir',
+        'Rabi‘ al-akhir',
         'Jumada al-ula',
         'Jumada al-akhirah',
         'Rajab',
