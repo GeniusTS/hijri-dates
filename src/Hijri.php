@@ -28,7 +28,7 @@ class Hijri
      *
      * @return \GeniusTS\HijriDate\Date
      */
-    public static function convertToHijri($date, int $adjustment = null)
+    public static function convertToHijri($date, ?int $adjustment = null)
     {
         if (! $date instanceof Carbon)
         {
@@ -48,7 +48,7 @@ class Hijri
      *
      * @return \Carbon\Carbon
      */
-    public static function convertToGregorian(int $day, int $month, int $year, int $adjustment = null)
+    public static function convertToGregorian(int $day, int $month, int $year, ?int $adjustment = null)
     {
         return static::toGregorian($day, $month, $year, static::getAdjustment($adjustment));
     }
@@ -117,7 +117,7 @@ class Hijri
      *
      * @return int
      */
-    protected static function getAdjustment(int $adjustment = null)
+    protected static function getAdjustment(?int $adjustment = null)
     {
         return $adjustment === null ? static::getDefaultAdjustment() : $adjustment;
     }
