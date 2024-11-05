@@ -239,7 +239,7 @@ class Date
         int $month,
         int $year,
         float $julianDay = 0,
-        Carbon $date = null,
+        ?Carbon $date = null,
         int $adjustment = 0)
     {
         $this->day = $day;
@@ -330,12 +330,12 @@ class Date
     /**
      * get date string
      *
-     * @param string $format
-     * @param int    $numbers
+     * @param string|null $format
+     * @param int|null    $numbers
      *
      * @return string
      */
-    public function format(string $format = null, int $numbers = null)
+    public function format(?string $format = null, ?int $numbers = null)
     {
         $numbers = $numbers === null ? static::getDefaultNumbers() : $numbers;
         $format = $format === null ? static::getToStringFormat() : $format;
